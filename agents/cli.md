@@ -7,8 +7,8 @@
 
 ## Current Status
 - **Status:** active
-- **Last updated:** 2026-04-06 14:30
-- **Currently working on:** 90 Harbourne dashboard — removing lat/lng, fixing gviz cache, populating research data
+- **Last updated:** 2026-04-06 15:15
+- **Currently working on:** Vercel rebuild in progress — waiting to verify 90H dashboard, then screenshot for Chris audit
 
 ## Capabilities
 - Full access to BPI Dashboard codebase (`C:\Users\User\Desktop\BPI Dashboard`)
