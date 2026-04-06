@@ -4,7 +4,7 @@ Every metric on the dashboard, where it comes from, where it's stored, and where
 
 **Owner:** laptop-2 (CL2)
 **Created:** 2026-04-07
-**Status:** ACTIVE — CLI to verify against codebase and correct any mismatches
+**Status:** UPDATED by desktop-1 (2026-04-07 06:15) — 17 mismatches corrected
 
 ---
 
@@ -25,27 +25,41 @@ Every metric on the dashboard, where it comes from, where it's stored, and where
 | Weekly Rent | CF Sheet | Cashflow Summary | "$550 pw" card |
 | LVR | CF Sheet (whole number, e.g. 90) | Cashflow calculations | Divided by 100 in fetchSheetData |
 | Interest Rate | CF Sheet (whole number, e.g. 6) | Cashflow | "IO @ 6%" + $31,320 |
-| Loan Term | CF Sheet | Cashflow calculations | Used internally |
-| Management Fee Rate | CF Sheet (whole number, e.g. 9) | Expenses | $2,574 |
+| Loan Term Years | CF Sheet | Cashflow calculations | Used internally |
+| Management Fee Rate | CF Sheet (whole number, e.g. 9) | **NOT FETCHED** — in fetchSheetData skip list | Was intended for Expenses but currently skipped |
 | Rent Growth Rate | CF Sheet (whole number, e.g. 6) | Equity Projection | "+6% p.a." column header |
 | Expense Growth Rate | CF Sheet (whole number, e.g. 3) | Cashflow chart | Assumptions text |
 | Capital Growth Rate | CF Sheet (whole number, e.g. 8) | Equity Projection | "+8% p.a." column header |
-| Year 1 Capital Growth Rate | CF Sheet (whole number, e.g. 10) | Equity Projection | Y1 value |
+| Year 1 Capital Growth Rate | CF Sheet (whole number, e.g. 10) | Equity Projection | Y1 value — **note: in fetchSheetData skip list for features, but read for cashflow** |
+| Annual Rent | CF Sheet (or Weekly Rent × 52 fallback) | Cashflow calculations | Used to compute yields — **fallback not previously documented** |
+| Annual Expenses | CF Sheet (or sum from Expenses tab) | Cashflow calculations | Used to compute net yield — **fallback not previously documented** |
+| Deposit | CF Sheet (or computed: Purchase Price × (1 - LVR/100)) | Upfront Costs | Can be sheet-sourced OR computed — **dual source not previously documented** |
+| Total Required | CF Sheet (or computed from upfront costs) | Cashflow Summary | Can be sheet-sourced OR computed — **dual source not previously documented** |
 | Stamp Duty | CF Sheet | Upfront Costs | "$21,389" |
 | Conveyancing | CF Sheet | Upfront Costs | "$2,000" |
-| Building Pest | CF Sheet | Upfront Costs | "$800" |
-| Insurance | CF Sheet | Upfront Costs + Expenses | "$2,653" |
+| Building and Pest | CF Sheet | Upfront Costs | "$800" — **also accepts "Building Pest" variant** |
+| Insurance | CF Sheet | Upfront Costs + Expenses | "$2,653" — **also accepts "Building Insurance" variant** |
 | Title Insurance | CF Sheet | Upfront Costs | "$800" |
 | Buyer Agent Fee | CF Sheet | Upfront Costs | "$0" (if applicable) |
-| Vacancy Rate | SQM Research (manual) | Rental Appraisal | "2%" card with market description |
-| DD Folder ID | Google Drive folder ID | DD Section | Folder links |
+| Vacancy Rate | SQM Research (manual) | Tenant/Rental section | As-is string display with source |
+| Vacancy Source | Manual entry | Tenant/Rental section | Source attribution for vacancy rate |
+| Region Name | Manual entry | Government section header | "Central Queensland" — **not previously documented** |
+| LGA | Manual entry (lowercase slug) | Industries (.id profile lookups) | "rockhampton" — **not previously documented** |
+| LGA Display Name | Manual entry | Industries section header | "Rockhampton Regional Council" — **not previously documented** |
+| Benchmark Name | Manual entry | Industries chart benchmark label | "Queensland" — **not previously documented** |
+| Latitude | Manual entry | Location map centering | -23.3925 — **not previously documented** |
+| Longitude | Manual entry | Location map centering | 150.5217 — **not previously documented** |
+| Map Bbox | Manual entry (optional) | Location map bounds | Optional bounding box — **not previously documented** |
+| Planning Report File ID | Google Drive file ID | Due Diligence | Planning report link — **not previously documented** |
+| Planning Report File Name | Manual entry | Due Diligence | Display name — **not previously documented** |
+| Planning Report Folder URL | Google Drive folder URL | Due Diligence | Folder link — **not previously documented** |
 | DD Folder URL | Google Drive folder URL | DD Section + Drive Repo | "Open DD Folder" links |
-| CF Sheet ID | CF spreadsheet ID | Cashflow | "View Cashflow Spreadsheet" link |
+| CF Sheet ID | CF spreadsheet ID | Cashflow | **NOT READ by code** — only Spreadsheet URL is used |
 | Spreadsheet URL | CF spreadsheet URL | Cashflow | Link button |
 | Phone | Manual entry | Disclaimer | Contact info |
 | Last Updated | Auto/manual | Header | "6 April 2026 09:05 pm" |
-| Industry Takeaways | Apps Script research | Local Industries | Bullet points |
-| Industry Sources | Apps Script research | Local Industries | Source links |
+| Industry Takeaways | Apps Script research | Local Industries | Bullet points — **stored as pipe-delimited strings** |
+| Industry Sources | Apps Script research | Local Industries | Source links — **stored as `Name~URL` pairs, pipe-separated** |
 
 ---
 
@@ -78,24 +92,30 @@ Every metric on the dashboard, where it comes from, where it's stored, and where
 
 ## Rental Appraisal and Sales Comps Tab → Dashboard
 
+4 columns: Label, URL, Thumbnail, File Name
+
 | Field | Source | Dashboard Section | Display |
 |---|---|---|---|
-| Document title | Filename from DD folder | Rental Appraisal | PDF icon card |
-| Document URL | Google Drive link | Rental Appraisal | Click to open |
-| Document type | File extension | Rental Appraisal | "PDF" badge |
+| Label (col 1) | Manual entry | Rental Appraisal | Section headers start with `--` (filtered out) |
+| URL (col 2) | Google Drive file URL | Rental Appraisal | Click to open |
+| Thumbnail (col 3) | Google Drive file ID | Rental Appraisal | **Large preview card** rendered as `lh3.googleusercontent.com/d/{id}=w600` |
+| File Name (col 4) | Manual clean label | Rental Appraisal | Display name on card — falls back to col 1 if blank. Street addresses and "AVM" suffixes auto-stripped |
 
 ---
 
 ## Due Diligence Tab → Dashboard
 
+7 columns: Label, Status, Folder Name, Folder URL, Image ID, File Name, Type
+
 | Field | Source | Dashboard Section | Display |
 |---|---|---|---|
-| Label | DD subfolder file name | DD Checks | Item title |
-| Status | Manual ("Uploaded" / "Reviewed") | DD Checks | Status badge |
-| Folder | DD subfolder name | DD Checks | Grouped by folder |
-| Folder URL | Google Drive subfolder link | DD Checks | "Open DD Folder" link |
-| Image ID | Google Drive file ID | DD Checks | Thumbnail preview |
-| File Name | DD file name | DD Checks | Display name |
+| Label (col 1) | DD subfolder file name | DD Checks | Item title |
+| Status (col 2) | Manual ("Complete" / etc.) | DD Checks | Status badge |
+| Folder Name (col 3) | DD subfolder name | DD Checks | Grouped by folder |
+| Folder URL (col 4) | Google Drive subfolder link | DD Checks | "Open DD Folder" link |
+| Image ID (col 5) | Google Drive file ID | DD Checks | Thumbnail preview |
+| File Name (col 6) | DD file name | DD Checks | Display name |
+| Type (col 7) | Manual (`image`/`pdf`/`video`/`link`) | DD Checks | Render mode — **not previously documented** |
 
 ---
 
@@ -103,8 +123,10 @@ Every metric on the dashboard, where it comes from, where it's stored, and where
 
 | Field | Source | Dashboard Section | Display |
 |---|---|---|---|
-| Place | Apps Script research | Location Proximity | "CBD", "Train Station", etc. |
+| Place | Apps Script research | Location Proximity | "CBD", "Train Station", etc. with emoji icon |
 | Distance | Apps Script research | Location Proximity | "5.7 km" |
+| Drive Time | Apps Script research (optional) | Location Proximity | **Optional** — not previously documented |
+| Address | Apps Script research (optional) | Location Proximity (amenity map) | **Optional** — used for Google Maps directions |
 
 ---
 
@@ -125,7 +147,7 @@ Every metric on the dashboard, where it comes from, where it's stored, and where
 |---|---|---|---|
 | Industry Name | Apps Script (ABS Census) | Local Industries | Bar chart labels |
 | LGA % | Apps Script (ABS Census) | Local Industries | Regional bar |
-| Benchmark % | Apps Script (ABS Census) | Local Industries | QLD comparison bar |
+| Benchmark % | Apps Script (ABS Census) | Local Industries | Benchmark comparison bar (label from Settings `Benchmark Name`, e.g. "Queensland") |
 
 ---
 
@@ -137,20 +159,22 @@ Every metric on the dashboard, where it comes from, where it's stored, and where
 
 ---
 
-## Computed in Dashboard Code (should be verified against CF Sheet)
+## Computed in Dashboard Code (verified against CF Sheet)
 
 | Metric | Calculation | Verify against |
 |---|---|---|
 | Gross Yield | annualRent / purchasePrice × 100 | CF Sheet |
 | Net Yield | (annualRent - totalExpenses) / purchasePrice × 100 | CF Sheet |
 | Weekly Shortfall | (annualRent - totalExpenses) / 52 | CF Sheet |
-| Total Cash Required | deposit + stampDuty + conveyancing + B&P + insurance + title + buyerAgent | CF Sheet |
-| Deposit | purchasePrice × (1 - LVR/100) | CF Sheet |
+| Total Cash Required | deposit + stampDuty + conveyancing + B&P + insurance + title + buyerAgent | CF Sheet — **can also be sheet-sourced (Total Required field)** |
+| Deposit | purchasePrice × (1 - LVR/100) | CF Sheet — **can also be sheet-sourced** |
 | Loan Amount | purchasePrice × LVR/100 | CF Sheet |
 | Interest Amount | loanAmount × interestRate/100 | CF Sheet |
 | 10-Year Chart values | Projected from base figures with growth rates | CF Sheet |
 
-**NOTE:** These are currently computed in CashflowSection.tsx. Per Chris's data flow convention, they should ideally be read from the CF Sheet, not computed. Desktop-1 flagged this in the code review. CLI to assess whether to move these to sheet-sourced values.
+**NOTE:** These are currently computed in CashflowSection.tsx. Per Chris's data flow convention, they should ideally be read from the CF Sheet, not computed. Desktop-1 flagged this in the code review.
+
+**CORRECTION (desktop-1):** Equity Projection values (Year, Rent/Wk, Property Value, Net Equity, Net Annual CF) are **sheet-sourced** from the Equity Projection tab via fetchSheetData.ts:237-243, NOT computed in dashboard code. Previously documented as "Computed in Dashboard Code" — this was wrong.
 
 ---
 
@@ -172,8 +196,9 @@ Every metric on the dashboard, where it comes from, where it's stored, and where
 
 ---
 
-## CLI Action Required
+## Revision Log
 
-1. Verify this field map against the actual codebase — correct any mismatches
-2. Ensure DEAL-SETUP.md references this map so anyone creating a deal knows exactly where every field goes
-3. Flag any fields that are computed in code but should come from the CF Sheet
+**2026-04-07 06:15 — desktop-1:** Updated with 17 mismatches found during codebase cross-reference:
+- HIGH: Fixed "Loan Term" → "Loan Term Years"; marked Management Fee Rate as not fetched; corrected Equity Projection as sheet-sourced; added Region/LGA/Benchmark/LGA Display Name fields; added Planning Report fields
+- MEDIUM: Marked CF Sheet ID and DD Folder ID as not read by code; added driveTime/address to Distances; noted Y1 Capital Growth Rate skip-list behavior; documented Total Required dual source
+- LOW: Documented Annual Rent/Annual Expenses fallbacks; Building Pest/Insurance field variants; Deposit dual source; Lat/Lng/MapBbox geographic fields; Industry Takeaways pipe-delimited format; Rental Appraisal 4 columns with thumbnails
