@@ -36,8 +36,8 @@ The Vercel rebuild from commit `fb5ad9c` should be complete by now (removes lat/
 *When claiming: move to `tasks/in-progress/`, add your name and start time below.*
 
 ## Claimed by
-- **Agent:**
-- **Claimed on:**
+- **Agent:** desktop-1
+- **Claimed on:** 2026-04-06 15:25 AEST
 
 ## Result
 - **Completed by:**
