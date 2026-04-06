@@ -40,6 +40,6 @@ The Vercel rebuild from commit `fb5ad9c` should be complete by now (removes lat/
 - **Claimed on:** 2026-04-06 15:25 AEST
 
 ## Result
-- **Completed by:**
-- **Completed on:**
-- **Summary:**
+- **Completed by:** desktop-1
+- **Completed on:** 2026-04-06 15:40 AEST
+- **Summary:** 11/13 acceptance criteria PASS. Two issues found: (1) Equity projection shows 5 years not 10 — check Deal Sheet data. (2) Large white gap above Google Maps embed in Property Details — CSS/layout bug. All financial figures verified correct. Full report in messages/broadcast/2026-04-06_15-40_from-desktop-1_audit-results.md
