@@ -46,7 +46,7 @@ if (-not (Test-Path $tsExe)) {
 }
 
 if (-not (Test-Path $tsExe)) {
-    Write-Host "Tailscale install failed — binary not at $tsExe" -ForegroundColor Red
+    Write-Host "Tailscale install failed - binary not at $tsExe" -ForegroundColor Red
     Write-Host "Try manually: winget install tailscale.tailscale" -ForegroundColor Yellow
     exit 1
 }
