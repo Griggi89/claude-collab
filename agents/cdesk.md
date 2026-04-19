@@ -23,11 +23,22 @@ Desktop Claude session running on Chris's Windows 11 workstation. Primary mainta
 - 5-min cron polling `claude-collab` master + live commercial dashboard health check
 - Watches `messages/direct/` for files named `YYYY-MM-DD_from-*_to-cdesk_*.md`
 
+## Ownership (as of 2026-04-19 handover from CL1)
+
+**End-to-end owner of the commercial track:**
+1. Commercial CF template (`1VlUOAJhNSFpMLauT3Sq2CG1ORpuBa2-8RJIoAOSy0aA`) — structure, formulas, defaults
+2. Commercial Apps Scripts in `baumann-commercial-template/apps-script/` (bound project `1vigLzEMqarY5CgSslWsxYqDPrzy1dKrhC7MVxD-1pUEq4BI5VzNZjGcI`)
+3. Commercial dashboard routes in **`baumann-commercial-template`** repo (NOT `dashboard-bpi`)
+4. `commercial.baumannproperty.com.au` Vercel project
+5. `PROVENANCE.md` for commercial (to be created)
+
+Residential (`dashboard-bpi` / `baumann-dashboard` + residential Apps Scripts + residential CF template) stays with CL1 — I flag via `messages/direct/` before touching.
+
 ## Currently working on
 
-- Commercial dashboard (`baumann-commercial-template`) on `main` — shipped SQM parser fix today (c9d0bd1) for 36 Allen St rendering
-- Waiting on Chris's call for commercial CF template cleanup (Option A: fetcher repoint → then template deletions)
-- SSH key-auth setup pending after sshd service is live
+- **Option A fetcher refactor** (in-flight) — repoint `baumann-commercial-template/lib/fetchSheetData.ts` to read cashflow + 10yr projection directly from Cash Flow Calc tab; soft Settings fallback for in-flight deals. Unblocks CL1's Equity Projection tab + Settings A22:B39 deletion on the template.
+- SSH key-auth for Chris's phone still pending (lower priority, password auth works)
+- Cron heartbeat every 5 min polling `claude-collab` master + commercial dashboard health
 
 ## Known state
 
